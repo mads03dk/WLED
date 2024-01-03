@@ -206,6 +206,10 @@
 #include "../usermods/usermod_v2_weather/usermod_v2_weather.h"
 #endif
 
+#if defined(USERMOD_BLE) && defined(CONFIG_BLUEDROID_ENABLED)
+#include "../usermods/BLE/usermod_BLE.h"
+#endif
+
 #ifdef USERMOD_MPU6050_IMU
 #include "../usermods/mpu6050_imu/usermod_mpu6050_imu.h"
 #endif
@@ -404,6 +408,10 @@ void registerUsermods()
 
 #ifdef USERMOD_WEATHER
   usermods.add(new WeatherUsermod("Weather", true));
+#endif
+
+#if defined(USERMOD_BLE) && defined(CONFIG_BLUEDROID_ENABLED)
+  usermods.add(new BLEUsermod());
 #endif
 
 
