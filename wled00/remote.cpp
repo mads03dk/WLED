@@ -172,7 +172,8 @@ void OnDataRecv(const uint8_t * mac, const uint8_t *incomingData, int len) {
   last_seq = cur_seq;
 }
 
-void handleRemote() {
+void handleRemote(){}
+void UNUSEDhandleRemote() {
   if (enable_espnow_remote) {
     if ((esp_now_state == ESP_NOW_STATE_UNINIT) && (interfacesInited || apActive)) { // ESPNOW requires Wifi to be initialized (either STA, or AP Mode) 
       USER_PRINTLN(F("\nInitializing ESP_NOW listener!\n"));

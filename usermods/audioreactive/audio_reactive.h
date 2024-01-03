@@ -1975,6 +1975,7 @@ class AudioReactive : public Usermod {
           &&( (realtimeMode == REALTIME_MODE_GENERIC)
             ||(realtimeMode == REALTIME_MODE_E131)
             ||(realtimeMode == REALTIME_MODE_UDP)
+            ||(realtimeMode == REALTIME_MODE_ESPNOW)
             ||(realtimeMode == REALTIME_MODE_ADALIGHT)
             ||(realtimeMode == REALTIME_MODE_ARTNET) ) )  // please add other modes here if needed
       {

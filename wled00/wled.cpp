@@ -125,6 +125,7 @@ void WLED::loop()
   handleConnection();
   #ifndef WLED_DISABLE_ESPNOW
   handleRemote();
+  handleEspNow();
   #endif
   handleSerial();
   handleImprovWifiScan();
@@ -1077,7 +1078,7 @@ void WLED::initConnection()
   #if defined(LOLIN_WIFI_FIX) && (defined(ARDUINO_ARCH_ESP32C3) || defined(ARDUINO_ARCH_ESP32S2) || defined(ARDUINO_ARCH_ESP32S3))
   WiFi.setTxPower(WIFI_POWER_8_5dBm);
   #endif
-  WiFi.setSleep(!noWifiSleep);
+  WiFi.setSleep(true);
   WiFi.setHostname(hostname);
 #else
   wifi_set_sleep_type((noWifiSleep) ? NONE_SLEEP_T : MODEM_SLEEP_T);

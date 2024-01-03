@@ -438,6 +438,7 @@ bool deserializeConfig(JsonObject doc, bool fromFS) {
   CJSON(syncGroups, if_sync_send["grp"]);
   if (if_sync_send[F("twice")]) udpNumRetries = 1; // import setting from 0.13 and earlier
   CJSON(udpNumRetries, if_sync_send["ret"]);
+  CJSON(ESPNowMode, if_sync_send["espnow"]);
 
   JsonObject if_nodes = interfaces["nodes"];
   CJSON(nodeListEnabled, if_nodes[F("list")]);
@@ -936,6 +937,7 @@ void serializeConfig() {
   if_sync_send["macro"] = notifyMacro;
   if_sync_send["grp"] = syncGroups;
   if_sync_send["ret"] = udpNumRetries;
+  if_sync_send["espnow"] = ESPNowMode;
 
   JsonObject if_nodes = interfaces.createNestedObject("nodes");
   if_nodes[F("list")] = nodeListEnabled;

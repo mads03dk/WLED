@@ -226,6 +226,8 @@ bool getPresetName(byte index, String& name);
 
 //remote.cpp
 void handleRemote();
+//wled_espnow.cpp
+void handleEspNow();
 
 //set.cpp
 bool isAsterisksOnly(const char* str, byte maxLen);

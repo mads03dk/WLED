@@ -363,6 +363,11 @@ void handleSettingsSet(AsyncWebServerRequest *request, byte subPage)
     dmxEnablePin= request->arg(F("DME")).toInt();
 #endif
 
+
+    t = request->arg(F("ENW")).toInt();
+    if (t >= ESPNOW_MODE_DISABLED && t <= ESPNOW_MODE_SLAVE) ESPNowMode = t;
+
+
     alexaEnabled = request->hasArg(F("AL"));
     strlcpy(alexaInvocationName, request->arg(F("AI")).c_str(), 33);
     t = request->arg(F("AP")).toInt();

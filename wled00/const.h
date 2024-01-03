@@ -184,11 +184,17 @@
 #define REALTIME_MODE_TPM2NET     7
 #define REALTIME_MODE_DDP         8
 #define REALTIME_MODE_DMX         9
+#define REALTIME_MODE_ESPNOW      10
 
 //realtime override modes
 #define REALTIME_OVERRIDE_NONE    0
 #define REALTIME_OVERRIDE_ONCE    1
 #define REALTIME_OVERRIDE_ALWAYS  2
+
+//realtime ESP-NOW modes
+#define ESPNOW_MODE_DISABLED    0
+#define ESPNOW_MODE_MASTER      1
+#define ESPNOW_MODE_SLAVE       2
 
 //E1.31 DMX modes
 #define DMX_MODE_DISABLED         0            //not used
