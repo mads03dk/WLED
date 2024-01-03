@@ -52,6 +52,10 @@ class BLEUsermod : public Usermod {
                 str += intensityIn;
                 str += "&FX=";
                 str += effectIn;
+                str += "&RD=";
+                str += realtimeOverride;
+                str += "&LM=";
+                str += realtimeMode;
                 dataCharacteristic->setValue(str);
             }
 
