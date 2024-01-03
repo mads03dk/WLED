@@ -37,9 +37,6 @@ void OnDataRecvCustom(const uint8_t *mac, const uint8_t *incomingData, int len) 
     // stop if not in slave mode
     if (ESPNowMode != ESPNOW_MODE_SLAVE) return;
 
-    sprintf(last_signal_src, "%02x%02x%02x%02x%02x%02x",
-            mac[0], mac[1], mac[2], mac[3], mac[4], mac[5]);
-
     // copy raw datastream into packet
     Datapacket packet;
     memcpy(&packet, incomingData, sizeof(packet));
@@ -60,7 +57,8 @@ void OnDataRecvCustom(const uint8_t *mac, const uint8_t *incomingData, int len) 
                 // Serial.print("B:");
                 // Serial.println(blue);
             }
-            setRealtimePixel(pixel, packet.R[i], packet.G[i], packet.B[i], 0);
+            // setRealtimePixel(pixel, packet.R[i], packet.G[i], packet.B[i], 0);
+            strip.setPixelColor(pixel, packet.R[i], packet.G[i], packet.B[i], 0);
         }
     }
 
@@ -77,16 +75,16 @@ void broadcastEspNow() {
     Datapacket packet;
     packet.offset = 0;
 
-    uint8_t packetLedCount = -1;
+    uint16_t packetLedCount = -1;
     for (uint16_t i = 0; i < pixelCount; i++) {
         packetLedCount++;
         uint32_t c = strip.getPixelColor(i);
-        packet.R[packetLedCount] = (qadd8(W(c), R(c)));  // R, add white channel to RGB channels as a simple RGBW -> RGB map
-        packet.G[packetLedCount] = (qadd8(W(c), G(c)));  // G
-        packet.B[packetLedCount] = (qadd8(W(c), B(c)));  // B
+        packet.R[packetLedCount] = (scale8(R(c), bri));  // R
+        packet.G[packetLedCount] = (scale8(G(c), bri));  // G
+        packet.B[packetLedCount] = (scale8(B(c), bri));  // B
 
         // if the max size for a packet or the last pixel
-        if (packetLedCount >= LEDCOUNT-1 || i >= pixelCount-1) {
+        if (packetLedCount == LEDCOUNT - 1 || i == pixelCount - 1) {
             // Serial.print("R:");
             // Serial.println(packet.R[0]);
             // Serial.print("G:");
@@ -100,13 +98,13 @@ void broadcastEspNow() {
             memset(&packet.R, 0, sizeof(packet.R));
             memset(&packet.G, 0, sizeof(packet.G));
             memset(&packet.B, 0, sizeof(packet.B));
-            Serial.print("Sent ");
-            Serial.print(packetLedCount);
-            Serial.print(" pixels offset by ");
-            Serial.println(packet.offset);
+            // Serial.print("Sent ");
+            // Serial.print(packetLedCount + 1);
+            // Serial.print(" pixels offset by ");
+            // Serial.println(packet.offset);
 
             packet.offset = packetLedCount;
-            packetLedCount = 0;
+            packetLedCount = -1;
         }
     }
 }
@@ -114,7 +112,7 @@ void broadcastEspNow() {
 void handleEspNow() {
     // if not disabled, make sure it's active
     if (ESPNowMode != ESPNOW_MODE_DISABLED) {
-        if ((esp_now_state == ESP_NOW_STATE_UNINIT) && (interfacesInited || apActive)) {  // ESPNOW requires Wifi to be initialized (either STA, or AP Mode)
+        if (esp_now_state == ESP_NOW_STATE_UNINIT && (interfacesInited || apActive)) {  // ESPNOW requires Wifi to be initialized (either STA, or AP Mode)
 
             Serial.println("[ESPNOW] init");
             if (esp_now_init() == ESP_OK) {
@@ -151,8 +149,9 @@ void handleEspNow() {
             esp_now_state = ESP_NOW_STATE_ON;
         }
 
-        if (esp_now_state == ESP_NOW_STATE_ON) {
-            if (ESPNowMode == ESPNOW_MODE_MASTER && lastEspNowUpdate != strip.getLastShow()) {
+        if (ESPNowMode == ESPNOW_MODE_MASTER && esp_now_state == ESP_NOW_STATE_ON) {
+            // update every frame
+            if (lastEspNowUpdate != strip.getLastShow()) {
                 broadcastEspNow();
                 lastEspNowUpdate = strip.getLastShow();
             }
